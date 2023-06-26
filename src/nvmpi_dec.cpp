@@ -505,6 +505,7 @@ void dec_capture_loop_fcn(void *arg)
 	return;
 }
 
+//TODO: accept in nvmpi_create_decoder input stream params (width and height, etc...) from ffmpeg.
 nvmpictx* nvmpi_create_decoder(nvCodingType codingType, nvPixFormat pixFormat, nvSize resized){
 	
 	int ret;
