@@ -188,10 +188,10 @@ index e593ad1..954ed1b 100644
  extern const FFCodec ff_vp9_vaapi_encoder;
 diff --git a/libavcodec/nvmpi_dec.c b/libavcodec/nvmpi_dec.c
 new file mode 100644
-index 0000000..4a77281
+index 0000000..2f04bc1
 --- /dev/null
 +++ b/libavcodec/nvmpi_dec.c
-@@ -0,0 +1,214 @@
+@@ -0,0 +1,220 @@
 +#include <stdio.h>
 +#include <stdlib.h>
 +#include <sys/time.h>
@@ -258,13 +258,19 @@ index 0000000..4a77281
 +		return AVERROR_INVALIDDATA;
 +	}
 +
-+    if (nvmpi_context->resize_expr && sscanf(nvmpi_context->resize_expr, "%dx%d",
-+                                             &resized.width, &resized.height) != 2) {
-+        av_log(avctx, AV_LOG_ERROR, "Invalid resize expressions\n");
-+        return AVERROR(EINVAL);
++    if (nvmpi_context->resize_expr) {
++		if (sscanf(nvmpi_context->resize_expr, "%dx%d",
++                    &resized.width, &resized.height) != 2) {
++			av_log(avctx, AV_LOG_ERROR, "Invalid resize expressions\n");
++			return AVERROR(EINVAL);
++		}
++		avctx->width = resized.width;
++		avctx->height = resized.height;
 +    }
 +	
 +	nvmpi_context->bufFrame = av_frame_alloc();
++	nvmpi_context->bufFrame->width = avctx->width;
++	nvmpi_context->bufFrame->height = avctx->height;
 +	if (ff_get_buffer(avctx, nvmpi_context->bufFrame, 0) < 0) {
 +		av_frame_free(&(nvmpi_context->bufFrame));
 +		nvmpi_context->bufFrame = NULL;

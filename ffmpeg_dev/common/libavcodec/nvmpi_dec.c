@@ -64,13 +64,19 @@ static int nvmpi_init_decoder(AVCodecContext *avctx){
 		return AVERROR_INVALIDDATA;
 	}
 
-    if (nvmpi_context->resize_expr && sscanf(nvmpi_context->resize_expr, "%dx%d",
-                                             &resized.width, &resized.height) != 2) {
-        av_log(avctx, AV_LOG_ERROR, "Invalid resize expressions\n");
-        return AVERROR(EINVAL);
+    if (nvmpi_context->resize_expr) {
+		if (sscanf(nvmpi_context->resize_expr, "%dx%d",
+                    &resized.width, &resized.height) != 2) {
+			av_log(avctx, AV_LOG_ERROR, "Invalid resize expressions\n");
+			return AVERROR(EINVAL);
+		}
+		avctx->width = resized.width;
+		avctx->height = resized.height;
     }
 	
 	nvmpi_context->bufFrame = av_frame_alloc();
+	nvmpi_context->bufFrame->width = avctx->width;
+	nvmpi_context->bufFrame->height = avctx->height;
 	if (ff_get_buffer(avctx, nvmpi_context->bufFrame, 0) < 0) {
 		av_frame_free(&(nvmpi_context->bufFrame));
 		nvmpi_context->bufFrame = NULL;
