@@ -1,5 +1,5 @@
 diff --git a/configure b/configure
-index b6616f0..d66e140 100755
+index 3cd3bdf..d66e140 100755
 --- a/configure
 +++ b/configure
 @@ -353,6 +353,7 @@ External library support:
@@ -422,14 +422,15 @@ index 0000000..6ea5aba
 +
 diff --git a/libavcodec/nvmpi_enc.c b/libavcodec/nvmpi_enc.c
 new file mode 100644
-index 0000000..957b7e0
+index 0000000..5d2725e
 --- /dev/null
 +++ b/libavcodec/nvmpi_enc.c
-@@ -0,0 +1,557 @@
+@@ -0,0 +1,558 @@
 +#include <nvmpi.h>
 +#include "avcodec.h"
 +#include "internal.h"
 +#include <stdio.h>
++#include <unistd.h>
 +#include "libavutil/avstring.h"
 +#include "libavutil/avutil.h"
 +#include "libavutil/common.h"
