@@ -45,12 +45,15 @@ set(NVMPI_SRC
     ${JETSON_MULTIMEDIA_API_SRC_DIR}/NvVideoEncoder.cpp)
 
 # Use plain library names to allow stubbing
-set(NVMPI_DEP_LIBS ${CMAKE_THREAD_LIBS_INIT} nvv4l2 nvjpeg)
+set(NVMPI_DEP_LIBS ${CMAKE_THREAD_LIBS_INIT} nvv4l2 nvbuf_utils nvjpeg)
 
-add_definitions(-DWITH_NVUTILS)
-set(NVMPI_SRC ${NVMPI_SRC}
-	/usr/src/jetson_multimedia_api/samples/common/classes/NvBufSurface.cpp)
-set(NVMPI_DEP_LIBS ${NVMPI_DEP_LIBS} nvbufsurface nvbufsurftransform)
+#if NvUtils API is present prefer it to nvbuf_utils
+if(EXISTS "/usr/src/jetson_multimedia_api/include/nvbufsurface.h")
+	add_definitions(-DWITH_NVUTILS)
+	set(NVMPI_SRC ${NVMPI_SRC}
+		/usr/src/jetson_multimedia_api/samples/common/classes/NvBufSurface.cpp)
+  set(NVMPI_DEP_LIBS ${CMAKE_THREAD_LIBS_INIT} nvv4l2 nvjpeg nvbufsurface nvbufsurftransform)
+endif()
 
 add_library(nvmpi SHARED ${NVMPI_SRC})
 add_library(nvmpi_static STATIC ${NVMPI_SRC})
